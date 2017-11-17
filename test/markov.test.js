@@ -118,5 +118,38 @@ describe('#tokenizeSentence', function() {
   });
 });
 describe('#wordCachify', function() {
-  
+  it('should setup word cache', function(done) {
+    var sentence = 'This is a sentence.';
+    var wordCache = markov.initializeWordCache();
+    var expected = markov.initializeWordCache();
+    expected.This = {'is':1};
+    expected.is = {'a':1};
+    expected.a = {'sentence':1};
+    expected.sentence = {'END':{'.':1}};
+
+    markov.wordCachify(wordCache, sentence);
+
+    assert.isObject(wordCache);
+    assert.deepEqual(wordCache, expected, 'should setup word cache');
+    done();
+  });
+  it('should setup word cache', function(done) {
+    var sentence = 'This is a sentence.';
+    var sentence2 = 'This is a slightly different sentence.';
+    var wordCache = markov.initializeWordCache();
+    var expected = markov.initializeWordCache();
+    expected.This = {'is':2};
+    expected.is = {'a':2};
+    expected.a = {'sentence':1, 'slightly':1};
+    expected.sentence = {'END':{'.':1}};
+    expected.slightly = {'different':1};
+    expected.different =  {'sentence': 1};
+
+    markov.wordCachify(wordCache, sentence);
+    markov.wordCachify(wordCache, sentence2);
+
+    assert.isObject(wordCache);
+    assert.deepEqual(wordCache, expected, 'should setup word cache');
+    done();
+  });
 });
