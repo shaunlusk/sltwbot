@@ -39,7 +39,7 @@ describe('#sentencize', function() {
     assert.deepEqual(result, expected, 'should have returned sentences');
     done();
   });
-  it('should should not return junk sentences', function(done) {
+  it('should not return junk sentences', function(done) {
     var expected = [
       'This is a test!',
       'This is only a test.',
@@ -55,7 +55,7 @@ describe('#sentencize', function() {
     }
     done();
   });
-  it('should should not return junk sentences', function(done) {
+  it('should not return junk sentences', function(done) {
     var expected = [
       'This is only a test.',
       ' .. ',
@@ -80,4 +80,43 @@ describe('#tokenizeSentence', function() {
     assert.deepEqual(result, expected, 'should have returned tokens');
     done();
   });
+  it('should return array of tokens', function(done) {
+    var sentence = 'This is a sentence';
+    var expected = ['This', 'is', 'a', 'sentence'];
+    var result = markov.tokenizeSentence(sentence);
+    assert.isArray(result);
+    assert.lengthOf(result, expected.length, 'should have returned ' + expected.length + ' tokens');
+    assert.deepEqual(result, expected, 'should have returned tokens');
+    done();
+  });
+  it('should return array of tokens', function(done) {
+    var sentence = 'one';
+    var expected = ['one'];
+    var result = markov.tokenizeSentence(sentence);
+    assert.isArray(result);
+    assert.lengthOf(result, expected.length, 'should have returned ' + expected.length + ' tokens');
+    assert.deepEqual(result, expected, 'should have returned tokens');
+    done();
+  });
+  it('should return array of tokens', function(done) {
+    var sentence = 'A question?';
+    var expected = ['A', 'question', '?'];
+    var result = markov.tokenizeSentence(sentence);
+    assert.isArray(result);
+    assert.lengthOf(result, expected.length, 'should have returned ' + expected.length + ' tokens');
+    assert.deepEqual(result, expected, 'should have returned tokens');
+    done();
+  });
+  it('should return array of tokens - with spaces at front of sentence - should never happen?', function(done) {
+    var sentence = ' This is a sentence with a space at the beginning!';
+    var expected = ['This', 'is', 'a', 'sentence', 'with', 'a', 'space', 'at', 'the', 'beginning', '!'];
+    var result = markov.tokenizeSentence(sentence);
+    assert.isArray(result);
+    assert.lengthOf(result, expected.length, 'should have returned ' + expected.length + ' tokens');
+    assert.deepEqual(result, expected, 'should have returned tokens');
+    done();
+  });
+});
+describe('#wordCachify', function() {
+  
 });
