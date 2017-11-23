@@ -262,44 +262,140 @@ describe('#makeKey', function() {
     done();
   });
 });
+describe('#populateEntries', function() {
+  it('should populate hash, first order', function(done) {
+    var wordCache = markov.initializeWordCache();
+    var tokens = ['this', 'is', 'a', 'sentence', '.'];
+    var order = 1;
+    var expected = {
+      'START':{'this':1},
+      'this':{'is':1},
+      'is':{'a':1},
+      'a':{'sentence':1},
+      'sentence':{'.':1},
+      '.':{'END':1}
+    };
+    markov.populateEntries(wordCache, tokens, order);
 
-// describe('#wordCachify', function() {
-//   describe('1st Order', function() {
-//     it('should setup word cache', function(done) {
-//       var sentence = 'This is a sentence.';
-//       var wordCache = markov.initializeWordCache();
-//       var expected = markov.initializeWordCache();
-//       expected.START.this = 1;
-//       expected.this = {'is':1};
-//       expected.is = {'a':1};
-//       expected.a = {'sentence':1};
-//       expected.sentence = {'END':{'.':1}};
-//
-//       markov.wordCachify(wordCache, sentence, 1);
-//
-//       assert.isObject(wordCache);
-//       assert.deepEqual(wordCache, expected, 'should setup word cache');
-//       done();
-//     });
-//     it('should setup word cache', function(done) {
-//       var sentence = 'This is a sentence.';
-//       var sentence2 = 'This is a slightly different sentence.';
-//       var wordCache = markov.initializeWordCache();
-//       var expected = markov.initializeWordCache();
-//       expected.START.this = 2;
-//       expected.this = {'is':2};
-//       expected.is = {'a':2};
-//       expected.a = {'sentence':1, 'slightly':1};
-//       expected.sentence = {'END':{'.':2}};
-//       expected.slightly = {'different':1};
-//       expected.different =  {'sentence': 1};
-//
-//       markov.wordCachify(wordCache, sentence, 1);
-//       markov.wordCachify(wordCache, sentence2, 1);
-//
-//       assert.isObject(wordCache);
-//       assert.deepEqual(wordCache, expected, 'should setup word cache');
-//       done();
-//     });
-//   });
-// });
+    assert.deepEqual(wordCache, expected);
+    done();
+  });
+  it('should populate an existing hash, first order', function(done) {
+    var tokens = ['a', 'different', 'sort', 'of', 'sentence', '.'];
+    var order = 1;
+    var wordCache = {
+      'START':{'this':1},
+      'this':{'is':1},
+      'is':{'a':1},
+      'a':{'sentence':1},
+      'sentence':{'.':1},
+      '.':{'END':1}
+    };
+    var expected = {
+      'START':{'this':1, 'a':1},
+      'different':{'sort':1},
+      'sort':{'of':1},
+      'of':{'sentence':1},
+      'this':{'is':1},
+      'is':{'a':1},
+      'a':{'sentence':1,'different':1},
+      'sentence':{'.':2},
+      '.':{'END':2}
+    };
+    markov.populateEntries(wordCache, tokens, order);
+
+    assert.deepEqual(wordCache, expected);
+    done();
+  });
+  it('should populate hash, second order', function(done) {
+    var wordCache = markov.initializeWordCache();
+    var tokens = ['this', 'is', 'a', 'sentence', '.'];
+    var order = 2;
+    var expected = {
+      'START':{'this':1},
+      'START this':{'is':1},
+      'this is':{'a':1},
+      'is a':{'sentence':1},
+      'a sentence':{'.':1},
+      'sentence .':{'END':1}
+    };
+    markov.populateEntries(wordCache, tokens, order);
+
+    assert.deepEqual(wordCache, expected);
+    done();
+  });
+  it('should populate an existing hash, second order', function(done) {
+    var tokens = ['a', 'different', 'sort', 'of', 'sentence', '.'];
+    var order = 2;
+    var wordCache = {
+      'START':{'this':1},
+      'START this':{'is':1},
+      'this is':{'a':1},
+      'is a':{'sentence':1},
+      'a sentence':{'.':1},
+      'sentence .':{'END':1}
+    };
+    var expected = {
+      'START':{'this':1, 'a':1},
+      'START a':{'different':1},
+      'a different':{'sort':1},
+      'different sort':{'of':1},
+      'sort of': {'sentence':1},
+      'of sentence':{'.':1},
+      'START this':{'is':1},
+      'this is':{'a':1},
+      'is a':{'sentence':1},
+      'a sentence':{'.':1},
+      'sentence .':{'END':2}
+    };
+    markov.populateEntries(wordCache, tokens, order);
+
+    assert.deepEqual(wordCache, expected);
+    done();
+  });
+});
+describe('#wordCachify', function() {
+  describe('1st Order', function() {
+    it('should setup word cache', function(done) {
+      var sentence = 'This is a sentence.';
+      var wordCache = markov.initializeWordCache();
+      var expected = {
+        'START':{'this':1},
+        'this':{'is':1},
+        'is':{'a':1},
+        'a':{'sentence':1},
+        'sentence':{'.':1},
+        '.':{'END':1}
+      };
+
+      markov.wordCachify(wordCache, sentence, 1);
+
+      assert.isObject(wordCache);
+      assert.deepEqual(wordCache, expected, 'should setup word cache');
+      done();
+    });
+    it('should setup word cache', function(done) {
+      var sentence = 'This is a sentence.';
+      var sentence2 = 'A different sort of sentence.';
+      var wordCache = markov.initializeWordCache();
+      var expected = {
+        'START':{'this':1, 'a':1},
+        'different':{'sort':1},
+        'sort':{'of':1},
+        'of':{'sentence':1},
+        'this':{'is':1},
+        'is':{'a':1},
+        'a':{'sentence':1,'different':1},
+        'sentence':{'.':2},
+        '.':{'END':2}
+      };
+
+      markov.wordCachify(wordCache, sentence, 1);
+      markov.wordCachify(wordCache, sentence2, 1);
+
+      assert.isObject(wordCache);
+      assert.deepEqual(wordCache, expected, 'should setup word cache');
+      done();
+    });
+  });
+});
