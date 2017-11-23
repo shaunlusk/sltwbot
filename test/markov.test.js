@@ -398,4 +398,54 @@ describe('#wordCachify', function() {
       done();
     });
   });
+  describe('2nd Order', function() {
+    it('should setup word cache', function(done) {
+      var sentence = 'This is a sentence.';
+      var wordCache = markov.initializeWordCache();
+      var expected = {
+        'START':{'this':1},
+        'START this':{'is':1},
+        'this is':{'a':1},
+        'is a':{'sentence':1},
+        'a sentence':{'.':1},
+        'sentence .':{'END':1}
+      };
+
+      markov.wordCachify(wordCache, sentence, 2);
+
+      assert.isObject(wordCache);
+      assert.deepEqual(wordCache, expected, 'should setup word cache');
+      done();
+    });
+    it('should setup word cache', function(done) {
+      var sentence = 'This is a sentence.';
+      var sentence2 = 'A different sort of sentence.';
+      var wordCache = markov.initializeWordCache();
+      var expected = {
+        'START':{'this':1, 'a':1},
+        'START a':{'different':1},
+        'a different':{'sort':1},
+        'different sort':{'of':1},
+        'sort of': {'sentence':1},
+        'of sentence':{'.':1},
+        'START this':{'is':1},
+        'this is':{'a':1},
+        'is a':{'sentence':1},
+        'a sentence':{'.':1},
+        'sentence .':{'END':2}
+      };
+
+      markov.wordCachify(wordCache, sentence, 2);
+      markov.wordCachify(wordCache, sentence2, 2);
+
+      assert.isObject(wordCache);
+      assert.deepEqual(wordCache, expected, 'should setup word cache');
+      done();
+    });
+  });
+});
+describe('#markovIt', function() {
+  it('should produce word cache from sentence', function(done) {
+    done();
+  });
 });
