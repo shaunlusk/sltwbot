@@ -2,6 +2,17 @@ var markov = require('../lib/markov.js');
 var assert = require('chai').assert;
 
 describe('#sentencize', function() {
+  it('should return array of a single sentence', function(done) {
+    var expected = [
+      'This is only a test.'
+    ];
+    var sentenceGroup = expected.join(' ');
+    var result = markov.sentencize(sentenceGroup);
+    assert.isArray(result);
+    assert.lengthOf(result, expected.length, 'should have returned ' + expected.length + ' sentences');
+    assert.deepEqual(result, expected, 'should have returned sentences');
+    done();
+  });
   it('should return array of sentences', function(done) {
     var expected = [
       'This is a test!',
@@ -445,7 +456,84 @@ describe('#wordCachify', function() {
   });
 });
 describe('#markovIt', function() {
-  it('should produce word cache from sentence', function(done) {
-    done();
+  describe('1st order', function() {
+    it('should produce word cache from sentence', function(done) {
+      var sentence = 'This is a sentence.';
+      var expected = {
+        'START':{'this':1},
+        'this':{'is':1},
+        'is':{'a':1},
+        'a':{'sentence':1},
+        'sentence':{'.':1},
+        '.':{'END':1}
+      };
+
+      var result = markov.markovIt(sentence);
+
+      assert.deepEqual(result, expected);
+      done();
+    });
+    it('should produce word cache from sentences', function(done) {
+      var sentence = 'This is a sentence.';
+      var sentence2 = 'A different sort of sentence.';
+      var str = sentence + "  " + sentence2;
+      var expected = {
+        'START':{'this':1, 'a':1},
+        'different':{'sort':1},
+        'sort':{'of':1},
+        'of':{'sentence':1},
+        'this':{'is':1},
+        'is':{'a':1},
+        'a':{'sentence':1,'different':1},
+        'sentence':{'.':2},
+        '.':{'END':2}
+      };
+
+      var result = markov.markovIt(str);
+
+      assert.deepEqual(result, expected);
+      done();
+    });
+  });
+  describe('2nd order', function() {
+    it('should produce word cache from sentence', function(done) {
+      var sentence = 'This is a sentence.';
+      var expected = {
+        'START':{'this':1},
+        'START this':{'is':1},
+        'this is':{'a':1},
+        'is a':{'sentence':1},
+        'a sentence':{'.':1},
+        'sentence .':{'END':1}
+      };
+
+      var result = markov.markovIt(sentence, 2);
+
+      assert.deepEqual(result, expected);
+      done();
+    });
+    it('should produce word cache from sentences', function(done) {
+      var sentence = 'This is a sentence.';
+      var sentence2 = 'A different sort of sentence.';
+      var str = sentence + "  " + sentence2;
+      var expected = {
+        'START':{'this':1, 'a':1},
+        'START a':{'different':1},
+        'a different':{'sort':1},
+        'different sort':{'of':1},
+        'sort of': {'sentence':1},
+        'of sentence':{'.':1},
+        'START this':{'is':1},
+        'this is':{'a':1},
+        'is a':{'sentence':1},
+        'a sentence':{'.':1},
+        'sentence .':{'END':2}
+      };
+
+      var result = markov.markovIt(str, 2);
+
+      assert.deepEqual(result, expected);
+      done();
+    });
   });
 });
