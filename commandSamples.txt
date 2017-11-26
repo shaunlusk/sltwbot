@@ -1,3 +1,3 @@
 node SentenceFromText.js testText.txt 1
-node TextToWordCache.js testText.txt testWordCache.json 2
 node SentenceFromWordCache.js testWordCache.json
+node TextToWordCache.js testText.txt > testWordCache2.json
