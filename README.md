@@ -8,6 +8,35 @@ This is a fun side project.  I may or may not maintain it.
 Not extensively tested, it's not bullet-proof.
 
 ## Usage
+
+Generate new tweet from a markov word cache:
+
+```
+node index.js
+```
+
+Requires twconfig.js with this format:
+
+```
+module.exports = {
+  consumer_key:         'your_consumer_key',
+  consumer_secret:      'your_consumer_secret',
+  access_token:         'your_access_token',
+  access_token_secret:  'your_access_token_secret'
+};
+```
+
+and markovConfig.js with this format:
+
+```
+module.exports = {
+  'wordCachePath':'path_to_persisted_word_cache'
+};
+```
+where the word cache path is the path to a file containing a word cache (see below how to generate one).
+
+------
+
 Generate a sentence from some text:
 
 ```
