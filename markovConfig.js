@@ -1,3 +1,3 @@
 module.exports = {
-  'wordCachePath':'testWordCache.json'
+  'wordCachePath':'bender2.json'
 };
