@@ -12,7 +12,7 @@ Not extensively tested, it's not bullet-proof.
 Generate new tweet from a markov word cache:
 
 ```
-node index.js
+node tweet.js
 ```
 
 Requires twconfig.js with this format:
