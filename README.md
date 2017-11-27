@@ -1,10 +1,15 @@
 # sltwbot
 
-Primitive, Markov-chain mased Twitter Bot.
+Primitive, Markov-chain based Twitter Bot.
+
 Takes in some text.
+
 Uses Markov chains to generate sentences from the input text.
 
-This is a fun side project, made for my own learning.  I may or may not maintain it.
+This is a fun side project, made for my own learning.  
+
+I may or may not maintain it.
+
 Not extensively tested, it's not bullet-proof.
 
 ## Usage
